@@ -56,7 +56,7 @@ namespace AdobeSignNet
             
         }
 
-        public async Task<AdobeSign.TransientDocumentResponse> AddDocument(string fileName, byte[] fileData)
+        public async Task<AdobeSign.TransientDocumentResponse> AddDocument(string fileName, byte[] fileData, string fileContentType = "")
         {
             var content = new MultipartFormDataContent();
             HttpContent fileContent = new ByteArrayContent(fileData);            
@@ -66,6 +66,9 @@ namespace AdobeSignNet
                 FileName = fileName
             };
 
+            if (!String.IsNullOrEmpty(fileContentType))
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(fileContentType);
+            
             content.Add(fileContent);
 
             string json = await API.PostRest("/transientDocuments", content);            
